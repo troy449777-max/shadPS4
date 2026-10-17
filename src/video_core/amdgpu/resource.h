@@ -450,8 +450,8 @@ struct Sampler {
     }
 
     bool Valid() const {
-        return max_aniso.Value() <= AnisoRatio::Sixteen && filter_mode.Value() <= FilterMode::Max &&
-               mip_filter.Value() <= MipFilter::Linear;
+        // Reserved max_aniso values (5-7) are treated as 16x, like real hardware clamps them.
+        return filter_mode.Value() <= FilterMode::Max && mip_filter.Value() <= MipFilter::Linear;
     }
 
     bool operator==(const Sampler& other) const noexcept {
@@ -484,7 +484,7 @@ struct Sampler {
         case AnisoRatio::Sixteen:
             return 16.0f;
         default:
-            UNREACHABLE();
+            return 16.0f;
         }
     }
 };
